@@ -101,3 +101,234 @@ Para iniciar el servidor MySQL en un sistema compatible, se suele ejecutar el si
  mysql -u root -p
 ```
 
+# Guía de Comandos SQL - MySQL
+
+Una guía detallada de los comandos más utilizados en MySQL con explicaciones y ejemplos prácticos.
+
+## Índice
+- [CREATE TABLE](#create-table)
+- [INSERT](#insert)
+- [SELECT](#select)
+- [UPDATE](#update)
+- [DELETE](#delete)
+- [ALTER TABLE](#alter-table)
+- [DROP TABLE](#drop-table)
+
+## CREATE TABLE
+
+### Descripción
+El comando CREATE TABLE se utiliza para crear una nueva tabla en la base de datos. Define la estructura de la tabla, incluyendo nombres de columnas, tipos de datos y restricciones.
+
+### Sintaxis Básica
+```sql
+CREATE TABLE nombre_tabla (
+    columna1 tipo_dato1 [restricciones],
+    columna2 tipo_dato2 [restricciones],
+    ...
+);
+```
+
+### Ejemplo Práctico
+```sql
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    salario DECIMAL(10,2),
+    fecha_contrato DATE
+);
+```
+
+### CREATE TABLE IF NOT EXISTS
+
+#### Descripción
+Esta variante evita errores si la tabla ya existe. Es útil en scripts que pueden ejecutarse múltiples veces.
+
+#### Sintaxis
+```sql
+CREATE TABLE IF NOT EXISTS nombre_tabla (
+    columna1 tipo_dato1 [restricciones],
+    columna2 tipo_dato2 [restricciones],
+    ...
+);
+```
+
+#### Ejemplo
+```sql
+CREATE TABLE IF NOT EXISTS productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(8,2),
+    stock INT DEFAULT 0
+);
+```
+
+## INSERT
+
+### Descripción
+El comando INSERT se utiliza para agregar nuevos registros a una tabla.
+
+### INSERT INTO ... VALUES
+
+#### Descripción
+Forma básica de insertar un solo registro o múltiples registros.
+
+#### Sintaxis
+```sql
+INSERT INTO tabla (columna1, columna2, ...)
+VALUES (valor1, valor2, ...);
+```
+
+#### Ejemplo
+```sql
+INSERT INTO empleados (nombre, email, salario)
+VALUES ('Juan Pérez', 'juan@email.com', 30000.00);
+```
+
+### INSERT INTO ... SELECT
+
+#### Descripción
+Permite insertar datos desde otra tabla o consulta.
+
+#### Sintaxis
+```sql
+INSERT INTO tabla1 (columna1, columna2, ...)
+SELECT columna1, columna2, ...
+FROM tabla2
+WHERE condicion;
+```
+
+#### Ejemplo
+```sql
+INSERT INTO empleados_backup (nombre, email, salario)
+SELECT nombre, email, salario
+FROM empleados
+WHERE fecha_contrato < '2023-01-01';
+```
+
+## SELECT
+
+### Descripción
+El comando SELECT se utiliza para recuperar datos de una o más tablas.
+
+### SELECT Básico
+
+#### Sintaxis
+```sql
+SELECT columna1, columna2
+FROM tabla
+WHERE condicion;
+```
+
+#### Ejemplo
+```sql
+SELECT nombre, salario
+FROM empleados
+WHERE salario > 25000;
+```
+
+### SELECT con JOIN
+
+#### Descripción
+Permite combinar datos de múltiples tablas.
+
+#### Ejemplo
+```sql
+SELECT e.nombre, d.nombre_departamento
+FROM empleados e
+INNER JOIN departamentos d ON e.departamento_id = d.id;
+```
+
+## ALTER TABLE
+
+### Descripción
+ALTER TABLE se utiliza para modificar la estructura de una tabla existente.
+
+### Agregar Columna
+
+#### Sintaxis
+```sql
+ALTER TABLE tabla
+ADD COLUMN nueva_columna tipo_dato [restricciones];
+```
+
+#### Ejemplo
+```sql
+ALTER TABLE empleados
+ADD COLUMN telefono VARCHAR(15);
+```
+
+### Modificar Columna
+
+#### Sintaxis
+```sql
+ALTER TABLE tabla
+MODIFY COLUMN columna nuevo_tipo_dato [restricciones];
+```
+
+#### Ejemplo
+```sql
+ALTER TABLE empleados
+MODIFY COLUMN telefono VARCHAR(20) NOT NULL;
+```
+
+## DROP TABLE
+
+### Descripción
+DROP TABLE elimina una tabla y todos sus datos de la base de datos.
+
+### Sintaxis Básica
+```sql
+DROP TABLE nombre_tabla;
+```
+
+### DROP TABLE IF EXISTS
+
+#### Descripción
+Elimina la tabla solo si existe, evitando errores.
+
+#### Sintaxis
+```sql
+DROP TABLE IF EXISTS nombre_tabla;
+```
+
+#### Ejemplo
+```sql
+DROP TABLE IF EXISTS empleados_temp;
+```
+
+## UPDATE
+
+### Descripción
+UPDATE modifica registros existentes en una tabla.
+
+### Sintaxis
+```sql
+UPDATE tabla
+SET columna1 = valor1, columna2 = valor2
+WHERE condicion;
+```
+
+### Ejemplo
+```sql
+UPDATE empleados
+SET salario = salario * 1.10
+WHERE fecha_contrato < '2023-01-01';
+```
+
+## DELETE
+
+### Descripción
+DELETE elimina registros de una tabla.
+
+### Sintaxis
+```sql
+DELETE FROM tabla
+WHERE condicion;
+```
+
+### Ejemplo
+```sql
+DELETE FROM empleados
+WHERE fecha_contrato < '2020-01-01';
+```
