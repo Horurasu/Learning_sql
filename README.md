@@ -100,235 +100,965 @@ Para iniciar el servidor MySQL en un sistema compatible, se suele ejecutar el si
 ```bash
  mysql -u root -p
 ```
+---
+---
+---
+# Guía SQL Básica
 
-# Guía de Comandos SQL - MySQL
+## SQL Statements (Declaraciones SQL)
 
-Una guía detallada de los comandos más utilizados en MySQL con explicaciones y ejemplos prácticos.
+**¿Qué son los Statements?**
+Los statements son comandos que indican a la base de datos qué acción realizar. Son las instrucciones básicas que usamos para interactuar con la base de datos, ya sea para consultar, insertar, modificar o eliminar datos.
 
-## Índice
-- [CREATE TABLE](#create-table)
-- [INSERT](#insert)
-- [SELECT](#select)
-- [UPDATE](#update)
-- [DELETE](#delete)
-- [ALTER TABLE](#alter-table)
-- [DROP TABLE](#drop-table)
+### Tipos principales de Statements:
 
-## CREATE TABLE
+#### 1. SELECT Statement
+**¿Qué es?** 
+Es el comando para recuperar datos de una o más tablas.
 
-### Descripción
-El comando CREATE TABLE se utiliza para crear una nueva tabla en la base de datos. Define la estructura de la tabla, incluyendo nombres de columnas, tipos de datos y restricciones.
+**¿Para qué se usa?**
+- Consultar información específica
+- Filtrar registros según condiciones
+- Ordenar resultados
+- Agrupar datos
 
-### Sintaxis Básica
+**Sintaxis básica:**
 ```sql
-CREATE TABLE nombre_tabla (
-    columna1 tipo_dato1 [restricciones],
-    columna2 tipo_dato2 [restricciones],
-    ...
-);
+SELECT columnas FROM tabla WHERE condicion;
 ```
 
-### Ejemplo Práctico
+**Ejemplos explicados:**
 ```sql
-CREATE TABLE empleados (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    salario DECIMAL(10,2),
-    fecha_contrato DATE
-);
+-- Obtener todos los usuarios
+SELECT * FROM usuarios;
+
+-- Obtener nombres y emails específicos
+SELECT nombre, email 
+FROM usuarios 
+WHERE edad > 18;
+
+-- Ordenar resultados
+SELECT nombre, edad 
+FROM usuarios 
+ORDER BY edad DESC;
 ```
 
-### CREATE TABLE IF NOT EXISTS
+#### 2. INSERT Statement
+**¿Qué es?**
+Comando para agregar nuevos registros a una tabla.
 
-#### Descripción
-Esta variante evita errores si la tabla ya existe. Es útil en scripts que pueden ejecutarse múltiples veces.
+**¿Para qué se usa?**
+- Añadir un nuevo registro
+- Añadir múltiples registros
+- Copiar datos de otra tabla
 
-#### Sintaxis
+**Sintaxis básica:**
 ```sql
-CREATE TABLE IF NOT EXISTS nombre_tabla (
-    columna1 tipo_dato1 [restricciones],
-    columna2 tipo_dato2 [restricciones],
-    ...
-);
+INSERT INTO tabla (columnas) VALUES (valores);
 ```
 
-#### Ejemplo
+**Ejemplos explicados:**
 ```sql
-CREATE TABLE IF NOT EXISTS productos (
+-- Insertar un usuario nuevo
+INSERT INTO usuarios (nombre, email) 
+VALUES ('Juan', 'juan@email.com');
+
+-- Insertar varios usuarios a la vez
+INSERT INTO usuarios (nombre, email) VALUES 
+    ('Ana', 'ana@email.com'),
+    ('Pedro', 'pedro@email.com');
+```
+
+#### 3. UPDATE Statement
+**¿Qué es?**
+Comando para modificar registros existentes en una tabla.
+
+**¿Para qué se usa?**
+- Actualizar datos existentes
+- Modificar múltiples registros
+- Corregir información
+
+**Sintaxis básica:**
+```sql
+UPDATE tabla SET columna = valor WHERE condicion;
+```
+
+**Ejemplos explicados:**
+```sql
+-- Actualizar la edad de un usuario
+UPDATE usuarios 
+SET edad = 25 
+WHERE nombre = 'Juan';
+
+-- Actualizar múltiples campos
+UPDATE usuarios 
+SET 
+    edad = 25,
+    ciudad = 'Madrid' 
+WHERE nombre = 'Juan';
+```
+
+#### 4. DELETE Statement
+**¿Qué es?**
+Comando para eliminar registros de una tabla.
+
+**¿Para qué se usa?**
+- Eliminar registros específicos
+- Limpiar datos obsoletos
+- Mantener la base de datos actualizada
+
+**Sintaxis básica:**
+```sql
+DELETE FROM tabla WHERE condicion;
+```
+
+**Ejemplos explicados:**
+```sql
+-- Eliminar un usuario específico
+DELETE FROM usuarios 
+WHERE nombre = 'Juan';
+
+-- Eliminar usuarios por condición
+DELETE FROM usuarios 
+WHERE edad < 18;
+```
+
+## Operadores en SQL
+
+**¿Qué son los operadores?**
+Son símbolos o palabras que permiten realizar comparaciones y operaciones lógicas en las consultas SQL.
+
+### 1. Operadores de Comparación
+**¿Para qué sirven?**
+Comparan valores y devuelven verdadero o falso.
+
+```sql
+-- Igual a (=)
+SELECT * FROM usuarios WHERE edad = 25;
+-- Busca usuarios que tengan exactamente 25 años
+
+-- Mayor que (>)
+SELECT * FROM productos WHERE precio > 100;
+-- Busca productos que cuesten más de 100
+
+-- Menor que (<)
+SELECT * FROM inventario WHERE stock < 10;
+-- Busca productos con menos de 10 unidades
+```
+
+### 2. Operadores Lógicos
+**¿Para qué sirven?**
+Combinan múltiples condiciones en una consulta.
+
+```sql
+-- AND: Ambas condiciones deben ser verdaderas
+SELECT * FROM usuarios 
+WHERE edad > 18 AND ciudad = 'Madrid';
+-- Busca usuarios mayores de 18 años que vivan en Madrid
+
+-- OR: Al menos una condición debe ser verdadera
+SELECT * FROM productos 
+WHERE categoria = 'Electrónica' OR categoria = 'Computación';
+-- Busca productos de electrónica o computación
+```
+
+## Palabras Clave (Keywords)
+
+**¿Qué son las Keywords?**
+Son palabras reservadas que tienen un significado especial en SQL y no pueden usarse como nombres de tablas o columnas.
+
+### Keywords Principales:
+```sql
+SELECT    -- Para seleccionar datos
+FROM      -- Para especificar la tabla fuente
+WHERE     -- Para filtrar registros
+ORDER BY  -- Para ordenar resultados
+GROUP BY  -- Para agrupar registros
+HAVING    -- Para filtrar grupos
+```
+
+## Tipos de Datos
+
+**¿Qué son los tipos de datos?**
+Definen qué tipo de información puede almacenar cada columna en una tabla.
+
+### 1. Tipos Numéricos
+```sql
+INT           -- Para números enteros
+DECIMAL(10,2) -- Para números con decimales
+FLOAT         -- Para números decimales aproximados
+```
+
+### 2. Tipos de Texto
+```sql
+CHAR(10)      -- Texto de longitud fija
+VARCHAR(100)  -- Texto de longitud variable
+TEXT          -- Texto largo
+```
+
+### 3. Tipos de Fecha/Hora
+```sql
+DATE          -- Solo fecha
+TIME          -- Solo hora
+DATETIME      -- Fecha y hora
+```
+
+# Data Definition Language (DDL)
+
+## ¿Qué es DDL?
+DDL son los comandos SQL utilizados para crear, modificar y eliminar estructuras de base de datos (como tablas, índices, etc.). Es el "lenguaje" que usamos para definir cómo se almacenarán los datos.
+
+## Comandos Principales DDL
+
+### 1. CREATE
+**¿Qué es?** 
+Comando para crear nuevos objetos en la base de datos.
+
+#### CREATE DATABASE
+**¿Para qué sirve?**
+Crear una nueva base de datos.
+
+```sql
+-- Crear base de datos simple
+CREATE DATABASE tienda;
+
+-- Crear base de datos si no existe
+CREATE DATABASE IF NOT EXISTS tienda;
+
+-- Crear base de datos especificando charset
+CREATE DATABASE tienda
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+```
+
+#### CREATE TABLE
+**¿Para qué sirve?**
+Crear una nueva tabla con sus columnas y restricciones.
+
+```sql
+-- Tabla básica
+CREATE TABLE usuarios (
+    id INT,
+    nombre VARCHAR(50)
+);
+
+-- Tabla con restricciones
+CREATE TABLE productos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
-    precio DECIMAL(8,2),
-    stock INT DEFAULT 0
+    precio DECIMAL(10,2) NOT NULL,
+    descripcion TEXT,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla con claves foráneas
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT,
+    fecha DATE,
+    total DECIMAL(10,2),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 ```
 
-## INSERT
+#### CREATE INDEX
+**¿Para qué sirve?**
+Crear índices para optimizar búsquedas.
 
-### Descripción
-El comando INSERT se utiliza para agregar nuevos registros a una tabla.
-
-### INSERT INTO ... VALUES
-
-#### Descripción
-Forma básica de insertar un solo registro o múltiples registros.
-
-#### Sintaxis
 ```sql
-INSERT INTO tabla (columna1, columna2, ...)
-VALUES (valor1, valor2, ...);
+-- Índice simple
+CREATE INDEX idx_nombre 
+ON usuarios(nombre);
+
+-- Índice único
+CREATE UNIQUE INDEX idx_email 
+ON usuarios(email);
+
+-- Índice compuesto
+CREATE INDEX idx_nombre_email 
+ON usuarios(nombre, email);
 ```
 
-#### Ejemplo
+### 2. ALTER
+**¿Qué es?**
+Comando para modificar la estructura de objetos existentes.
+
+#### ALTER TABLE
+**¿Para qué sirve?**
+Modificar la estructura de una tabla existente.
+
 ```sql
-INSERT INTO empleados (nombre, email, salario)
-VALUES ('Juan Pérez', 'juan@email.com', 30000.00);
-```
-
-### INSERT INTO ... SELECT
-
-#### Descripción
-Permite insertar datos desde otra tabla o consulta.
-
-#### Sintaxis
-```sql
-INSERT INTO tabla1 (columna1, columna2, ...)
-SELECT columna1, columna2, ...
-FROM tabla2
-WHERE condicion;
-```
-
-#### Ejemplo
-```sql
-INSERT INTO empleados_backup (nombre, email, salario)
-SELECT nombre, email, salario
-FROM empleados
-WHERE fecha_contrato < '2023-01-01';
-```
-
-## SELECT
-
-### Descripción
-El comando SELECT se utiliza para recuperar datos de una o más tablas.
-
-### SELECT Básico
-
-#### Sintaxis
-```sql
-SELECT columna1, columna2
-FROM tabla
-WHERE condicion;
-```
-
-#### Ejemplo
-```sql
-SELECT nombre, salario
-FROM empleados
-WHERE salario > 25000;
-```
-
-### SELECT con JOIN
-
-#### Descripción
-Permite combinar datos de múltiples tablas.
-
-#### Ejemplo
-```sql
-SELECT e.nombre, d.nombre_departamento
-FROM empleados e
-INNER JOIN departamentos d ON e.departamento_id = d.id;
-```
-
-## ALTER TABLE
-
-### Descripción
-ALTER TABLE se utiliza para modificar la estructura de una tabla existente.
-
-### Agregar Columna
-
-#### Sintaxis
-```sql
-ALTER TABLE tabla
-ADD COLUMN nueva_columna tipo_dato [restricciones];
-```
-
-#### Ejemplo
-```sql
-ALTER TABLE empleados
+-- Agregar columna
+ALTER TABLE usuarios
 ADD COLUMN telefono VARCHAR(15);
+
+-- Agregar columna con restricciones
+ALTER TABLE usuarios
+ADD COLUMN edad INT CHECK (edad >= 18);
+
+-- Modificar columna
+ALTER TABLE usuarios
+MODIFY COLUMN nombre VARCHAR(100) NOT NULL;
+
+-- Eliminar columna
+ALTER TABLE usuarios
+DROP COLUMN telefono;
+
+-- Agregar clave foránea
+ALTER TABLE pedidos
+ADD FOREIGN KEY (usuario_id) 
+REFERENCES usuarios(id);
+
+-- Renombrar tabla
+ALTER TABLE usuarios
+RENAME TO clientes;
 ```
 
-### Modificar Columna
+### 3. DROP
+**¿Qué es?**
+Comando para eliminar objetos de la base de datos.
 
-#### Sintaxis
+**¿Para qué sirve?**
+Eliminar tablas, bases de datos, índices u otros objetos.
+
 ```sql
-ALTER TABLE tabla
-MODIFY COLUMN columna nuevo_tipo_dato [restricciones];
+-- Eliminar base de datos
+DROP DATABASE tienda;
+
+-- Eliminar base de datos si existe
+DROP DATABASE IF EXISTS tienda;
+
+-- Eliminar tabla
+DROP TABLE usuarios;
+
+-- Eliminar tabla si existe
+DROP TABLE IF EXISTS usuarios;
+
+-- Eliminar índice
+DROP INDEX idx_nombre ON usuarios;
 ```
 
-#### Ejemplo
+### 4. TRUNCATE
+**¿Qué es?**
+Comando para eliminar todos los registros de una tabla.
+
+**¿Para qué sirve?**
+Vaciar una tabla de manera más eficiente que DELETE.
+
 ```sql
+-- Vaciar tabla
+TRUNCATE TABLE usuarios;
+
+-- Vaciar tabla si existe
+TRUNCATE TABLE IF EXISTS usuarios;
+```
+
+## Ejemplos Prácticos Combinados
+
+### Crear una Base de Datos Completa
+```sql
+-- Crear base de datos
+CREATE DATABASE IF NOT EXISTS tienda_online;
+
+-- Usar la base de datos
+USE tienda_online;
+
+-- Crear tabla de categorías
+CREATE TABLE categorias (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT true
+);
+
+-- Crear tabla de productos
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    categoria_id INT,
+    stock INT DEFAULT 0,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
+
+-- Agregar índices
+CREATE INDEX idx_producto_nombre ON productos(nombre);
+CREATE INDEX idx_producto_categoria ON productos(categoria_id);
+```
+
+### Modificar Estructura Existente
+```sql
+-- Agregar nuevas columnas a productos
+ALTER TABLE productos
+ADD COLUMN marca VARCHAR(50),
+ADD COLUMN peso DECIMAL(5,2);
+
+-- Modificar columna existente
+ALTER TABLE productos
+MODIFY COLUMN nombre VARCHAR(150) NOT NULL;
+
+-- Agregar restricción
+ALTER TABLE productos
+ADD CONSTRAINT chk_precio 
+CHECK (precio > 0);
+```
+
+## Buenas Prácticas DDL
+
+1. **Nombres de Objetos**
+   - Usar nombres descriptivos
+   - Evitar palabras reservadas
+   - Usar minúsculas y guiones bajos
+   - Ser consistente en la nomenclatura
+
+2. **Restricciones**
+   - Nombrar las restricciones explícitamente
+   - Usar tipos de datos apropiados
+   - Definir claves primarias siempre
+   - Usar FOREIGN KEY para mantener integridad
+
+3. **Índices**
+   - Crear índices para campos de búsqueda frecuente
+   - No excederse en la cantidad de índices
+   - Nombrar índices de manera descriptiva
+
+4. **Modificaciones**
+   - Hacer backup antes de modificaciones importantes
+   - Usar IF EXISTS para evitar errores
+   - Probar en ambiente de desarrollo primero
+
+# Data Manipulation Language (DML)
+
+## ¿Qué es DML?
+Son los comandos SQL utilizados para manipular los datos dentro de las tablas. Permiten consultar, insertar, modificar y eliminar registros.
+
+## Comandos Principales DML
+
+### 1. SELECT
+**¿Qué es?**
+Comando para consultar y recuperar datos de una o más tablas.
+
+#### SELECT Básico
+```sql
+-- Seleccionar todas las columnas
+SELECT * FROM usuarios;
+
+-- Seleccionar columnas específicas
+SELECT nombre, email FROM usuarios;
+
+-- Seleccionar con alias
+SELECT 
+    nombre AS nombre_cliente,
+    email AS correo_electronico
+FROM usuarios;
+```
+
+#### SELECT con WHERE
+**¿Para qué sirve?**
+Filtrar registros según condiciones específicas.
+
+```sql
+-- Filtro simple
+SELECT * FROM productos 
+WHERE precio > 100;
+
+-- Múltiples condiciones
+SELECT * FROM productos 
+WHERE precio > 100 AND categoria = 'Electrónica';
+
+-- Condiciones con OR
+SELECT * FROM productos 
+WHERE categoria = 'Electrónica' OR categoria = 'Computación';
+
+-- Búsqueda de texto
+SELECT * FROM usuarios 
+WHERE nombre LIKE 'Juan%';
+```
+
+#### SELECT con ORDER BY
+**¿Para qué sirve?**
+Ordenar los resultados.
+
+```sql
+-- Orden ascendente (predeterminado)
+SELECT * FROM productos 
+ORDER BY precio;
+
+-- Orden descendente
+SELECT * FROM productos 
+ORDER BY precio DESC;
+
+-- Múltiples columnas
+SELECT * FROM productos 
+ORDER BY categoria, precio DESC;
+```
+
+#### SELECT con JOIN
+**¿Para qué sirve?**
+Combinar datos de múltiples tablas.
+
+```sql
+-- INNER JOIN
+SELECT 
+    p.nombre AS producto,
+    c.nombre AS categoria
+FROM productos p
+INNER JOIN categorias c ON p.categoria_id = c.id;
+
+-- LEFT JOIN
+SELECT 
+    u.nombre AS usuario,
+    p.id AS id_pedido
+FROM usuarios u
+LEFT JOIN pedidos p ON u.id = p.usuario_id;
+
+-- Multiple JOIN
+SELECT 
+    u.nombre AS usuario,
+    p.id AS pedido,
+    pr.nombre AS producto
+FROM usuarios u
+INNER JOIN pedidos p ON u.id = p.usuario_id
+INNER JOIN productos pr ON p.producto_id = pr.id;
+```
+
+### 2. INSERT
+**¿Qué es?**
+Comando para agregar nuevos registros a una tabla.
+
+#### INSERT Simple
+```sql
+-- Insertar un registro
+INSERT INTO usuarios (nombre, email) 
+VALUES ('Juan Pérez', 'juan@email.com');
+
+-- Insertar múltiples registros
+INSERT INTO usuarios (nombre, email) 
+VALUES 
+    ('Ana López', 'ana@email.com'),
+    ('Carlos Ruiz', 'carlos@email.com');
+```
+
+#### INSERT con SELECT
+**¿Para qué sirve?**
+Insertar datos desde otra tabla.
+
+```sql
+-- Copiar usuarios a tabla de respaldo
+INSERT INTO usuarios_backup 
+SELECT * FROM usuarios 
+WHERE fecha_registro < '2023-01-01';
+
+-- Insertar datos específicos
+INSERT INTO usuarios_premium (nombre, email)
+SELECT nombre, email 
+FROM usuarios 
+WHERE tipo = 'VIP';
+```
+
+### 3. UPDATE
+**¿Qué es?**
+Comando para modificar registros existentes.
+
+#### UPDATE Simple
+```sql
+-- Actualizar un campo
+UPDATE usuarios 
+SET status = 'Activo' 
+WHERE id = 1;
+
+-- Actualizar múltiples campos
+UPDATE usuarios 
+SET 
+    status = 'Activo',
+    ultimo_login = CURRENT_TIMESTAMP
+WHERE id = 1;
+```
+
+#### UPDATE con JOIN
+```sql
+-- Actualizar basado en otra tabla
+UPDATE productos p
+INNER JOIN categorias c ON p.categoria_id = c.id
+SET p.precio = p.precio * 1.1
+WHERE c.nombre = 'Electrónica';
+```
+
+### 4. DELETE
+**¿Qué es?**
+Comando para eliminar registros de una tabla.
+
+#### DELETE Simple
+```sql
+-- Eliminar un registro
+DELETE FROM usuarios 
+WHERE id = 1;
+
+-- Eliminar múltiples registros
+DELETE FROM usuarios 
+WHERE status = 'Inactivo';
+```
+
+#### DELETE con JOIN
+```sql
+-- Eliminar basado en otra tabla
+DELETE p 
+FROM productos p
+INNER JOIN categorias c ON p.categoria_id = c.id
+WHERE c.status = 'Descontinuado';
+```
+
+## Ejemplos Prácticos Combinados
+
+### Gestión de una Tienda Online
+```sql
+-- 1. Insertar nuevo producto
+INSERT INTO productos (nombre, precio, categoria_id)
+VALUES ('Laptop HP', 999.99, 1);
+
+-- 2. Buscar productos con detalles
+SELECT 
+    p.nombre AS producto,
+    p.precio,
+    c.nombre AS categoria,
+    p.stock
+FROM productos p
+INNER JOIN categorias c ON p.categoria_id = c.id
+WHERE p.precio < 1000
+ORDER BY p.precio DESC;
+
+-- 3. Actualizar stock después de una venta
+UPDATE productos 
+SET stock = stock - 1
+WHERE id = 1;
+
+-- 4. Eliminar productos sin stock
+DELETE FROM productos 
+WHERE stock = 0;
+```
+
+### Gestión de Usuarios y Pedidos
+```sql
+-- 1. Registrar nuevo usuario
+INSERT INTO usuarios (nombre, email)
+VALUES ('María García', 'maria@email.com');
+
+-- 2. Crear pedido
+INSERT INTO pedidos (usuario_id, total)
+VALUES (LAST_INSERT_ID(), 150.00);
+
+-- 3. Ver pedidos de usuarios
+SELECT 
+    u.nombre,
+    COUNT(p.id) as total_pedidos,
+    SUM(p.total) as total_gastado
+FROM usuarios u
+LEFT JOIN pedidos p ON u.id = p.usuario_id
+GROUP BY u.id
+HAVING total_pedidos > 0;
+```
+
+## Buenas Prácticas DML
+
+1. **Consultas SELECT**
+   - Especificar columnas en lugar de usar *
+   - Usar alias para mejorar legibilidad
+   - Limitar resultados cuando sea posible
+   - Optimizar JOINs
+
+2. **Inserciones y Actualizaciones**
+   - Usar transacciones para operaciones múltiples
+   - Verificar datos antes de insertar
+   - Hacer backup antes de actualizaciones masivas
+
+3. **Eliminaciones**
+   - Usar WHERE para evitar eliminaciones accidentales
+   - Considerar soft delete en lugar de DELETE
+   - Verificar integridad referencial
+
+4. **Rendimiento**
+   - Usar índices apropiadamente
+   - Evitar subconsultas cuando sea posible
+   - Optimizar condiciones WHERE
+
+# Consultas Agregadas y Restricciones de Datos
+
+## 1. Consultas Agregadas (Aggregate Queries)
+
+### ¿Qué son?
+Son funciones que realizan cálculos sobre un conjunto de registros y devuelven un único valor. Permiten obtener estadísticas y resúmenes de datos.
+
+### Funciones de Agregación Principales
+
+#### COUNT
+**¿Qué hace?** Cuenta el número de filas o valores.
+
+```sql
+-- Contar todos los registros
+SELECT COUNT(*) FROM usuarios;
+
+-- Contar valores no nulos
+SELECT COUNT(email) FROM usuarios;
+
+-- Contar valores únicos
+SELECT COUNT(DISTINCT ciudad) FROM usuarios;
+```
+
+#### SUM
+**¿Qué hace?** Suma valores numéricos.
+
+```sql
+-- Suma simple
+SELECT SUM(total) FROM pedidos;
+
+-- Suma con condición
+SELECT SUM(total) 
+FROM pedidos 
+WHERE fecha >= '2024-01-01';
+
+-- Suma por grupo
+SELECT cliente_id, SUM(total) as total_gastado
+FROM pedidos
+GROUP BY cliente_id;
+```
+
+#### AVG
+**¿Qué hace?** Calcula el promedio de valores numéricos.
+
+```sql
+-- Promedio simple
+SELECT AVG(precio) FROM productos;
+
+-- Promedio con redondeo
+SELECT ROUND(AVG(precio), 2) 
+FROM productos;
+
+-- Promedio por categoría
+SELECT categoria_id, AVG(precio) as precio_promedio
+FROM productos
+GROUP BY categoria_id;
+```
+
+#### MAX y MIN
+**¿Qué hace?** Encuentra valores máximos y mínimos.
+
+```sql
+-- Valores máximo y mínimo
+SELECT 
+    MAX(precio) as precio_maximo,
+    MIN(precio) as precio_minimo
+FROM productos;
+
+-- Por categoría
+SELECT categoria_id,
+    MAX(precio) as mas_caro,
+    MIN(precio) as mas_barato
+FROM productos
+GROUP BY categoria_id;
+```
+
+### GROUP BY
+**¿Qué hace?** Agrupa registros para aplicar funciones de agregación.
+
+```sql
+-- Agrupación simple
+SELECT ciudad, COUNT(*) as total_usuarios
+FROM usuarios
+GROUP BY ciudad;
+
+-- Múltiples columnas
+SELECT 
+    ciudad,
+    status,
+    COUNT(*) as total
+FROM usuarios
+GROUP BY ciudad, status;
+
+-- Con cálculos
+SELECT 
+    categoria_id,
+    COUNT(*) as total_productos,
+    AVG(precio) as precio_promedio,
+    SUM(stock) as stock_total
+FROM productos
+GROUP BY categoria_id;
+```
+
+### HAVING
+**¿Qué hace?** Filtra resultados de grupos (como WHERE pero para grupos).
+
+```sql
+-- Filtrar grupos
+SELECT ciudad, COUNT(*) as total
+FROM usuarios
+GROUP BY ciudad
+HAVING total > 100;
+
+-- Filtros complejos
+SELECT 
+    categoria_id,
+    AVG(precio) as precio_promedio
+FROM productos
+GROUP BY categoria_id
+HAVING precio_promedio > 500
+    AND COUNT(*) > 10;
+```
+
+## 2. Restricciones de Datos (Data Constraints)
+
+### ¿Qué son?
+Son reglas que se aplican a las columnas de una tabla para mantener la integridad de los datos.
+
+### Tipos de Restricciones
+
+#### PRIMARY KEY
+**¿Qué hace?** Define una columna o conjunto de columnas como identificador único.
+
+```sql
+-- En creación de tabla
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY,
+    nombre VARCHAR(100)
+);
+
+-- Clave primaria compuesta
+CREATE TABLE detalle_pedido (
+    pedido_id INT,
+    producto_id INT,
+    cantidad INT,
+    PRIMARY KEY (pedido_id, producto_id)
+);
+
+-- Agregar después
+ALTER TABLE usuarios
+ADD PRIMARY KEY (id);
+```
+
+#### FOREIGN KEY
+**¿Qué hace?** Establece una relación entre tablas.
+
+```sql
+-- En creación de tabla
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY,
+    usuario_id INT,
+    FOREIGN KEY (usuario_id) 
+        REFERENCES usuarios(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- Agregar después
+ALTER TABLE pedidos
+ADD FOREIGN KEY (usuario_id) 
+REFERENCES usuarios(id);
+```
+
+#### UNIQUE
+**¿Qué hace?** Asegura valores únicos en una columna.
+
+```sql
+-- En columna individual
+CREATE TABLE usuarios (
+    id INT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE,
+    username VARCHAR(50) UNIQUE
+);
+
+-- Restricción única compuesta
+CREATE TABLE productos (
+    id INT PRIMARY KEY,
+    codigo VARCHAR(10),
+    modelo VARCHAR(10),
+    UNIQUE(codigo, modelo)
+);
+```
+
+#### NOT NULL
+**¿Qué hace?** Prohíbe valores nulos.
+
+```sql
+-- En creación de tabla
+CREATE TABLE empleados (
+    id INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+-- Modificar columna existente
 ALTER TABLE empleados
-MODIFY COLUMN telefono VARCHAR(20) NOT NULL;
+MODIFY email VARCHAR(100) NOT NULL;
 ```
 
-## DROP TABLE
+#### CHECK
+**¿Qué hace?** Valida que los datos cumplan ciertas condiciones.
 
-### Descripción
-DROP TABLE elimina una tabla y todos sus datos de la base de datos.
-
-### Sintaxis Básica
 ```sql
-DROP TABLE nombre_tabla;
+-- Restricción simple
+CREATE TABLE productos (
+    id INT PRIMARY KEY,
+    precio DECIMAL(10,2) CHECK (precio > 0),
+    stock INT CHECK (stock >= 0)
+);
+
+-- Restricciones complejas
+CREATE TABLE empleados (
+    id INT PRIMARY KEY,
+    edad INT,
+    salario DECIMAL(10,2),
+    CHECK (edad >= 18),
+    CHECK (salario >= 0)
+);
 ```
 
-### DROP TABLE IF EXISTS
+#### DEFAULT
+**¿Qué hace?** Establece un valor predeterminado.
 
-#### Descripción
-Elimina la tabla solo si existe, evitando errores.
-
-#### Sintaxis
 ```sql
-DROP TABLE IF EXISTS nombre_tabla;
+-- Valores por defecto simples
+CREATE TABLE articulos (
+    id INT PRIMARY KEY,
+    nombre VARCHAR(100),
+    activo BOOLEAN DEFAULT true,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Con expresiones
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY,
+    total DECIMAL(10,2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'Pendiente'
+);
 ```
 
-#### Ejemplo
+### Ejemplos Combinados
+
 ```sql
-DROP TABLE IF EXISTS empleados_temp;
+-- Tabla completa con restricciones
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    departamento_id INT,
+    salario DECIMAL(10,2) CHECK (salario >= 0),
+    fecha_contrato DATE DEFAULT CURRENT_DATE,
+    activo BOOLEAN DEFAULT true,
+    FOREIGN KEY (departamento_id) 
+        REFERENCES departamentos(id)
+        ON DELETE RESTRICT
+);
+
+-- Consulta agregada con restricciones
+SELECT 
+    d.nombre as departamento,
+    COUNT(*) as total_empleados,
+    AVG(e.salario) as salario_promedio,
+    MAX(e.salario) as salario_maximo
+FROM empleados e
+INNER JOIN departamentos d ON e.departamento_id = d.id
+WHERE e.activo = true
+GROUP BY d.nombre
+HAVING AVG(e.salario) > 30000;
 ```
 
-## UPDATE
-
-### Descripción
-UPDATE modifica registros existentes en una tabla.
-
-### Sintaxis
-```sql
-UPDATE tabla
-SET columna1 = valor1, columna2 = valor2
-WHERE condicion;
-```
-
-### Ejemplo
-```sql
-UPDATE empleados
-SET salario = salario * 1.10
-WHERE fecha_contrato < '2023-01-01';
-```
-
-## DELETE
-
-### Descripción
-DELETE elimina registros de una tabla.
-
-### Sintaxis
-```sql
-DELETE FROM tabla
-WHERE condicion;
-```
-
-### Ejemplo
-```sql
-DELETE FROM empleados
-WHERE fecha_contrato < '2020-01-01';
-```
